@@ -16,7 +16,7 @@
 	<description>A tool to help debug flow of SMS messages within the Ushur Platform</description>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>8</java.version>
 	</properties>
 
 	<dependencies>

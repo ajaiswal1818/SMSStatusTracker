@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.mongodb.MongoClient;
 
 @RestController
 public class SMSStatusTrackerController {
@@ -28,11 +29,17 @@ public class SMSStatusTrackerController {
 		
         ApplicationContext context = new ClassPathXmlApplicationContext("configurations.xml");
         
-        CommandInterface comm = (CommandInterface)context.getBean(  payload.get("command").getAsString());
+        JsonObject responseObj = new JsonObject(); 
         
-        JsonObject responseObj = comm.respond(payload,env);
-		
-		((ClassPathXmlApplicationContext)context).close();
+        try ( MongoClient mongoClient = new MongoClient() ) {
+        
+	        CommandInterface comm = (CommandInterface)context.getBean(  payload.get("command").getAsString());
+	        
+	        responseObj = comm.respond(payload,env, mongoClient);
+			
+			((ClassPathXmlApplicationContext)context).close();
+			
+        }
         
         return new ResponseEntity<Object>( responseObj.toString(), HttpStatus.ACCEPTED);	
 		

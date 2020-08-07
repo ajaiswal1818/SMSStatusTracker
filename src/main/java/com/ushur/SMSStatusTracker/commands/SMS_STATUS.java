@@ -23,71 +23,71 @@ public class SMS_STATUS implements CommandInterface
 	
 	
 	@Override
-	public JsonObject respond(JsonObject payload, Environment env) {
+	public JsonObject respond(JsonObject payload, Environment env, MongoClient mongoClient) {
 		
 		JsonObject responseObj = new JsonObject();
 		responseObj.addProperty("command",payload.get("command").getAsString());
 		responseObj.addProperty("fromDate", payload.get("fromDate").getAsString() );
 		responseObj.addProperty("toDate", payload.get("toDate").getAsString() );
 		
-		try (MongoClient mongoClient = new MongoClient()) {
+//		try (MongoClient mongoClient = new MongoClient()) {
 			
-			Duration MAX_DURATION = Duration.ofDays(Long.parseLong(env.getProperty("MAX_DURATION")));
-			
-			MongoDatabase db = mongoClient.getDatabase(env.getProperty("spring.data.mongodb.database"));
-			
-			MongoCollection<Document> collection = db.getCollection(env.getProperty("spring.data.mongodb.collection"));
-			
-			BasicDBObject query = new BasicDBObject();
-			
-			Instant fromDate = Instant.now();
-			Instant toDate = Instant.now();
-
-			if ( payload.get("fromDate").getAsString().isEmpty() && payload.get("toDate").getAsString().isEmpty() ) {
-				fromDate = toDate.minus(MAX_DURATION);
-			}
-			else if ( payload.get("fromDate").getAsString().isEmpty() ) {
-				toDate = (Instant.parse(payload.get("toDate").getAsString()));
-				fromDate = toDate.minus(MAX_DURATION);
-			}
-			else if ( payload.get("toDate").getAsString().isEmpty()) {
-				fromDate = (Instant.parse(payload.get("fromDate").getAsString()));
-				toDate = fromDate.plus(MAX_DURATION);
-			}
-			else {
-				fromDate = (Instant.parse(payload.get("fromDate").getAsString()));
-				toDate = (Instant.parse(payload.get("toDate").getAsString()));
-			}
-			
-			
-			query.put("DateCreated", new BasicDBObject("$gte", fromDate).append("$lte", toDate));
+		Duration MAX_DURATION = Duration.ofDays(Long.parseLong(env.getProperty("MAX_DURATION")));
 		
-			FindIterable<Document> findIterable = collection.find (query);
-			MongoCursor<Document> cursor = findIterable.iterator();
-			
-			HashMap<String,Integer> map = new HashMap<String,Integer>();
-			
-			
-			while(cursor.hasNext()) {
-			    
-			    Document doc = cursor.next();
-			    
-			    String status = doc.getString("Status");
+		MongoDatabase db = mongoClient.getDatabase(env.getProperty("spring.data.mongodb.database"));
+		
+		MongoCollection<Document> collection =  db.getCollection(env.getProperty("spring.data.mongodb.collection"));
+		
+		BasicDBObject query = new BasicDBObject();
+		
+		Instant fromDate = Instant.now();
+		Instant toDate = Instant.now();
 
-				map.putIfAbsent(status, 0);
-				map.put( status , map.get(status) + 1 );
-			    
-			}
-			
-			JsonObject resp = new JsonObject();
-			
-			for(String i : map.keySet()) {
-				resp.addProperty(i , map.get(i) );		
-			}
-			
-			responseObj.add("responseData", resp);
-			
+		if ( payload.get("fromDate").getAsString().isEmpty() && payload.get("toDate").getAsString().isEmpty() ) {
+			fromDate = toDate.minus(MAX_DURATION);
 		}
+		else if ( payload.get("fromDate").getAsString().isEmpty() ) {
+			toDate = (Instant.parse(payload.get("toDate").getAsString()));
+			fromDate = toDate.minus(MAX_DURATION);
+		}
+		else if ( payload.get("toDate").getAsString().isEmpty()) {
+			fromDate = (Instant.parse(payload.get("fromDate").getAsString()));
+			toDate = fromDate.plus(MAX_DURATION);
+		}
+		else {
+			fromDate = (Instant.parse(payload.get("fromDate").getAsString()));
+			toDate = (Instant.parse(payload.get("toDate").getAsString()));
+		}
+		
+		
+		query.put("DateCreated", new BasicDBObject("$gte", fromDate).append("$lte", toDate));
+	
+		FindIterable<Document> findIterable = collection.find (query);
+		MongoCursor<Document> cursor = findIterable.iterator();
+		
+		HashMap<String,Integer> map = new HashMap<String,Integer>();
+		
+		
+		while(cursor.hasNext()) {
+		    
+		    Document doc = cursor.next();
+		    
+		    String status = doc.getString("Status");
+
+			map.putIfAbsent(status, 0);
+			map.put( status , map.get(status) + 1 );
+		    
+		}
+		
+		JsonObject resp = new JsonObject();
+		
+		for(String i : map.keySet()) {
+			resp.addProperty(i , map.get(i) );		
+		}
+		
+		responseObj.add("responseData", resp);
+			
+//		}
 
 		return responseObj;
 	}

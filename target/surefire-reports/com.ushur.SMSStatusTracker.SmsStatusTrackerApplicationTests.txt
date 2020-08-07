@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.ushur.SMSStatusTracker.SmsStatusTrackerApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 32.3 s - in com.ushur.SMSStatusTracker.SmsStatusTrackerApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.926 s - in com.ushur.SMSStatusTracker.SmsStatusTrackerApplicationTests
