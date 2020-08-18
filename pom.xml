@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.ushur</groupId>
 	<artifactId>SMSStatusTracker</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<packaging>war</packaging>
 	<name>SMSStatusTracker</name>
 	<description>A tool to help debug flow of SMS messages within the Ushur Platform</description>
@@ -46,11 +46,6 @@
 		    <artifactId>gson</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.json/json -->
-		<dependency>
-		    <groupId>org.json</groupId>
-		    <artifactId>json</artifactId>
-		    <version>20190722</version>
-		</dependency>
 		
 		<dependency>
 	        <groupId>org.mongodb</groupId>
@@ -58,15 +53,41 @@
 	        <version>3.12.6</version>
 	    </dependency>
 		
-		
 	</dependencies>
 
 	<build>
-		<finalName>${artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<finalName>SMSStatusTracker</finalName>
+					<mainClass>com.ushur.SMSStatusTracker.SmsStatusTrackerApplication</mainClass>
+					<execution>
+						<id>repackage</id>
+					</execution>
+				</configuration>	
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+			    <executions>
+			 		<execution>
+			            <id>Just-Interface</id>
+			            <goals><goal>jar</goal></goals>
+			            <phase>package</phase>
+			            <configuration>
+			  				
+			  				<version>0.0.1</version>
+			  				<classifier>ush</classifier>
+			               	<includes>
+			   					<include>**/CommandInterface.*</include>
+			   					<include>**/SmsStatusTrackerApplication.*</include>                   
+			              	</includes>
+			              	    
+			            </configuration>
+			        </execution>
+			 	</executions>
 			</plugin>
 		</plugins>
 	</build>

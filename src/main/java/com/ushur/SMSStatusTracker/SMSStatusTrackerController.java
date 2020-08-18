@@ -2,7 +2,8 @@ package com.ushur.SMSStatusTracker;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mongodb.MongoClient;
+
+
 
 @RestController
 public class SMSStatusTrackerController {
@@ -27,17 +30,18 @@ public class SMSStatusTrackerController {
 		// The RequestBody is in the form of String and it is converted to JsonObject here.
 		JsonObject payload = new Gson().fromJson(payload_String, JsonObject.class);
 		
-        ApplicationContext context = new ClassPathXmlApplicationContext("configurations.xml");
-        
+
+        ApplicationContext context = new AnnotationConfigApplicationContext(SmsStatusTrackerApplication.class);
+		
         JsonObject responseObj = new JsonObject(); 
         
         try ( MongoClient mongoClient = new MongoClient() ) {
         
-	        CommandInterface comm = (CommandInterface)context.getBean(  payload.get("command").getAsString());
+        	CommandInterface comm =   (CommandInterface) context.getBean(  payload.get("command").getAsString());
 	        
 	        responseObj = comm.respond(payload,env, mongoClient);
 			
-			((ClassPathXmlApplicationContext)context).close();
+			((AbstractApplicationContext)context).close();
 			
         }
         
