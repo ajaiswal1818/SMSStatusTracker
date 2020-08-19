@@ -77,7 +77,10 @@
 			            <goals><goal>jar</goal></goals>
 			            <phase>package</phase>
 			            <configuration>
-			  				
+			  				<includes>
+			  					<include>**/CommandInterface.class</include>
+			  					<include>**/SmsStatusTrackerApplication.class</include>
+			  				</includes>
 			  				<version>0.0.1</version>
 			  				<classifier>ush</classifier>
 			               	
