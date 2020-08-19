@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 //import com.ushur.SMSStatusTrackerAdapter;
 
-@ComponentScan(basePackages="com.ushur.*")
+//@ComponentScan(basePackages="com.ushur")
 @SpringBootApplication
 public class SmsStatusTrackerApplication {
 

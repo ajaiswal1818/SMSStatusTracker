@@ -80,10 +80,7 @@
 			  				
 			  				<version>0.0.1</version>
 			  				<classifier>ush</classifier>
-			               	<includes>
-			   					<include>**/CommandInterface.*</include>
-			   					<include>**/SmsStatusTrackerApplication.*</include>                   
-			              	</includes>
+			               	
 			              	    
 			            </configuration>
 			        </execution>
