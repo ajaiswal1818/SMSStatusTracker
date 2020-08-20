@@ -1,22 +1,18 @@
 package com.ushur.SMSStatusTracker;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.logging.log4j.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
-//import com.ushur.SMSStatusTrackerAdapter;
 
-//@ComponentScan(basePackages="com.ushur")
 @SpringBootApplication
 public class SmsStatusTrackerApplication {
 
-//	@Autowired
-//	SMSStatusTrackerAdapter adapter;
+	static Logger logger = LogManager.getLogger(SmsStatusTrackerApplication.class.getName());
 	
 	public static void main(String[] args) {
 		SpringApplication.run(SmsStatusTrackerApplication.class, args);	
-		
+		logger.info("The Spring Boot Application Started");
 	}
 
 }
